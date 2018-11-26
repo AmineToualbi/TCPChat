@@ -85,11 +85,18 @@ void TCPListener::run() {
 						for (int i = 0; i < master.fd_count; i++) {
 							SOCKET outSock = master.fd_array[i]; 
 //That line for multi clients	//if (outSock != listeningSocket && outSock != sock) {
-							if(outSock!=listeningSocket && outSock != sock){
-								std::ostringstream ss; 
-								ss << "SOCKET #" << sock << ": " << buf << "\n";
-								std::string strOut = ss.str();
-								send(outSock, strOut.c_str(), strOut.size() + 1, 0);
+							if(outSock!=listeningSocket){
+
+								if (outSock == sock) {
+									std::string msgSent = "Message sent."; 
+									send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
+								}
+								else {
+									std::ostringstream ss;
+									ss << "SOCKET #" << sock << ": " << buf << "\n";
+									std::string strOut = ss.str();
+									send(outSock, strOut.c_str(), strOut.size() + 1, 0);
+								}
 								
 							}
 						}

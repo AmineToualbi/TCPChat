@@ -6,21 +6,37 @@
 
 using namespace std;
 
+void messageReceived(string msgReceived) {
+	cout << "SERVER: " << msgReceived << endl;
+}
+
+
 int main() {
 
-	TCPClient client; 
-
-	if (client.initWinsock()) {
-			client.connectSock();
-
-	}
+	TCPClient *client = new TCPClient; 
 	string msg = "a";
 
-	while (true) {
+
+	if (client->initWinsock()) {
+
+		client->connectSock();
+
+		client->listenRecvThread(messageReceived); 
+		while (true) {
+			getline(cin, msg); 
+			client->sendMsg(msg);
+		}
+
+	}
+
+	/* (true) {
 		//client.sendMsg();
 		getline(cin, msg);
 		//cout << msg << endl;
+		//client.sendMsg(msg);
 		client.sendMsg(msg);
-	}
+	}*/
+
+
 
 }

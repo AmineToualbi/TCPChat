@@ -1,17 +1,23 @@
 #include "TCPClient.h"
 #include <iostream>
 #include <string>
+#include <thread>
 
 using namespace std;
 
 
 TCPClient::TCPClient()
 {
+	recvThreadRunning = false; 
 }
 
 
 TCPClient::~TCPClient()
 {
+	closesocket(clientSocket); 
+	WSACleanup();
+	recvThreadRunning = false; 
+	recvThread.join();	//Destroy safely to thread. 
 }
 
 bool TCPClient::initWinsock() {
@@ -39,6 +45,37 @@ SOCKET TCPClient::createSocket() {
 
 }
 
+void TCPClient::threadRecv() {
+
+	recvThreadRunning = true;
+	while (recvThreadRunning) {
+
+		char buf[4096];
+		ZeroMemory(buf, 4096);
+
+		int bytesReceived = recv(clientSocket, buf, 4096, 0); 
+		if (bytesReceived > 0) {
+
+			//messageSent = string(buf, 0, bytesReceived); 
+			if (messageReceived != NULL) {
+				messageReceived(string(buf, 0, bytesReceived));
+			}
+
+		}
+
+	}
+}
+
+void TCPClient::listenRecvThread(MessageReceivedHandler handler) {
+
+	messageReceived = handler;
+
+	this->recvThread = thread([&]() {
+		threadRecv(); 
+	});
+
+}
+
 void TCPClient::connectSock() {
 
 	//SOCKET sock = createSocket();
@@ -60,31 +97,30 @@ void TCPClient::connectSock() {
 
 void TCPClient::sendMsg(string txt) {
 
-	char buf[4096];
-	string message = txt;
+	if (!txt.empty() && clientSocket != INVALID_SOCKET) {
+		char buf[4096];
+		string message = txt;
 
-	//do {
+		//do {
 
-		//cout << "> ";
-		//getline(cin, message);
+			//cout << "> ";
+			//getline(cin, message);
 
-		//if (message.size() > 0) {
+			//if (message.size() > 0) {
 
-			int sendResult = send(clientSocket, message.c_str(), message.size() + 1, 0);
-			if (sendResult != SOCKET_ERROR) {
+		int sendResult = send(clientSocket, message.c_str(), message.size() + 1, 0);
+		if (sendResult != SOCKET_ERROR) {
 
-				ZeroMemory(buf, 4096);
-				int bytesReceived = recv(clientSocket, buf, 4096, 0);
+			ZeroMemory(buf, 4096);
+			int bytesReceived = recv(clientSocket, buf, 4096, 0);
 
-				if (bytesReceived > 0) {
+			if (bytesReceived > 0) {
 
-					cout << "SERVER> " << string(buf, 0, bytesReceived) << endl;
-
-				}
-
+				cout << "SERVER> " << string(buf, 0, bytesReceived) << endl;
 
 			}
-
+		}
+	}
 
 		//}
 
