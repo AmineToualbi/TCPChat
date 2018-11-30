@@ -17,10 +17,11 @@ public:
 	bool initWinsock(); 
 	void connectSock();
 	void sendMsg(std::string txt);
-	void listenRecvThread(MessageReceivedHandler handler);
-	bool receiveMsg(MessageReceivedHandler handler);
 	std::thread recvThread;
 	void threadRecv();
+	std::string username;
+	bool joinChat = true;
+
 
 private:
 	SOCKET createSocket();

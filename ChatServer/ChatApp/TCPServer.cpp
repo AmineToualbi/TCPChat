@@ -122,11 +122,9 @@ void TCPServer::run() {
 
 					SOCKET client = accept(listeningSocket, nullptr, nullptr);		//Accept incoming connection & identify it as a new client. 
 					FD_SET(client, &master);		//Add new connection to list of sockets.  
-				//	std::string welcomeMsg = "Welcome to Amine's Chat.\n";			//Notify client that he entered the chat. 
-					std::string usernameRequest = "Please, enter a username.\n"; 
-					//send(client, welcomeMsg.c_str(), welcomeMsg.size() + 1, 0);
-					send(client, usernameRequest.c_str(), usernameRequest.size() + 1, 0);
-					std::cout << "New user joined the chat." << std::endl;			//Log connection on server side.
+					std::string welcomeMsg = "Welcome to Amine's Chat.\n";			//Notify client that he entered the chat. 
+					send(client, welcomeMsg.c_str(), welcomeMsg.size() + 1, 0);
+					std::cout << "New user joined the chat." << std::endl;			//Log connection on server side. 
 
 				}
 				else {										//Case 2: receive a msg.	
@@ -150,10 +148,10 @@ void TCPServer::run() {
 									send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);	//Notify the client that the msg was delivered. 	
 								}
 								else {						//If the current sock is not the sender -> it should receive the msg. 
-									std::ostringstream ss;
-									ss << "SOCKET " << sock << ": " << buf << "\n";
-									std::string strOut = ss.str();
-									send(outSock, strOut.c_str(), strOut.size() + 1, 0);		//Send the msg to the current socket. 
+									//std::ostringstream ss;
+									//ss << "SOCKET " << sock << ": " << buf << "\n";
+									//std::string strOut = ss.str();
+									send(outSock, buf, bytesReceived, 0);		//Send the msg to the current socket. 
 								}
 
 							}

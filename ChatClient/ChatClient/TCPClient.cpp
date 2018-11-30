@@ -76,10 +76,10 @@ void TCPClient::threadRecv() {
 		char buf[4096];
 		ZeroMemory(buf, 4096);
 
-		int bytesReceived = recv(serverSocket, buf, 4096, 0);	//Receive from another client?? Shouldn't receive from server?
+		int bytesReceived = recv(serverSocket, buf, 4096, 0);	
 		if (bytesReceived > 0) {			//If client disconnects, bytesReceived = 0; if error, bytesReceived = -1;
 				
-			std::cout << "SERVER> " << string(buf, 0, bytesReceived) << std::endl;
+			std::cout << string(buf, 0, bytesReceived) << std::endl;
 
 		}
 
