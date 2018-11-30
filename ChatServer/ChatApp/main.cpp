@@ -1,15 +1,14 @@
 #include <iostream>
 #include <string>
-#include "TCPListener.h"
+#include "TCPServer.h"
 
 using namespace std; 
 
-void Listener_MessageReceived(TCPListener* listener, int client, string msg);
 string serverIP = "127.0.0.1";
 
 int main() {
 	
-	TCPListener server(serverIP, 54010, Listener_MessageReceived);
+	TCPServer server(serverIP, 54010);
 
 	if (server.initWinsock()) {
 
@@ -20,9 +19,3 @@ int main() {
 
 }
 
-void Listener_MessageReceived(TCPListener* listener, int client, string msg) {
-
-	//Echo message back to the client. 
-	listener->sendMsg(client, msg);
-
-}

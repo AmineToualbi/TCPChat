@@ -6,11 +6,6 @@
 
 using namespace std;
 
-void messageReceived(string msgReceived) {
-	cout << "SERVER: " << msgReceived << endl;
-}
-
-
 int main() {
 
 	TCPClient *client = new TCPClient; 
@@ -21,7 +16,10 @@ int main() {
 
 		client->connectSock();
 
-		client->listenRecvThread(messageReceived); 
+		client->recvThread = thread([&] {
+			client->threadRecv(); 
+		});
+
 		while (true) {
 			getline(cin, msg); 
 			client->sendMsg(msg);
@@ -29,14 +27,8 @@ int main() {
 
 	}
 
-	/* (true) {
-		//client.sendMsg();
-		getline(cin, msg);
-		//cout << msg << endl;
-		//client.sendMsg(msg);
-		client.sendMsg(msg);
-	}*/
-
-
+	delete client; 
+	cin.get(); 
+	return 0;
 
 }

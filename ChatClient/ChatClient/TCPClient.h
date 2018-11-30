@@ -18,18 +18,17 @@ public:
 	void connectSock();
 	void sendMsg(std::string txt);
 	void listenRecvThread(MessageReceivedHandler handler);
+	bool receiveMsg(MessageReceivedHandler handler);
+	std::thread recvThread;
+	void threadRecv();
 
 private:
 	SOCKET createSocket();
 	std::string serverIP = "127.0.0.1";
 	int serverPort = 54010;
 	sockaddr_in hint;
-	SOCKET clientSocket; 
+	SOCKET serverSocket;		//This is the socket we will connect to. 
 	bool recvThreadRunning; 
-	std::thread recvThread;
-	void threadRecv(); 
-	//std::string messageSent; 
-	MessageReceivedHandler messageReceived; 
 
 
 };
