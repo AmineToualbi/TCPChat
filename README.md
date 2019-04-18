@@ -17,4 +17,4 @@ For testing purposes, the IP address of the server is set to 127.0.0.1, which is
 
 # Example
 
-![alt text](https://ibb.co/cxzPGXd)
+![alt text](https://image.noelshack.com/fichiers/2019/16/4/1555620586-screenshot-of-tcp-chat.png)
